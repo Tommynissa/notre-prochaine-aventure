@@ -4,6 +4,6 @@ const BGM={
  sync(){if(this.started&&this.enabled&&!this.suspended&&!document.hidden)this.audio.play().catch(()=>{});else this.audio.pause()},
  start(){this.started=true;this.sync()},
  suspend(value){this.suspended=value;this.sync()},
- toggle(){this.enabled=!this.enabled;try{localStorage.setItem('aventure-music',this.enabled?'on':'off')}catch{}this.start();this.label()},
- label(){const b=document.querySelector('#music-toggle');if(b){b.textContent=this.enabled?'♫ Musique activée':'♫ Musique coupée';b.setAttribute('aria-pressed',String(this.enabled))}}
+ toggle(){this.enabled=!this.enabled;if(!this.enabled)RewardAudio.stop();try{localStorage.setItem('aventure-music',this.enabled?'on':'off')}catch{}this.start();this.label()},
+ label(){const b=document.querySelector('#music-toggle');if(b){b.textContent=this.enabled?'♫ Son activé':'♫ Son coupé';b.setAttribute('aria-pressed',String(this.enabled))}}
 };BGM.init();
