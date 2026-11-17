@@ -119,3 +119,17 @@ body{background:#6cb9b0}button,input{font-family:inherit}button{transition:filte
  .final-panel{padding:8px 12px}.final-header{margin-bottom:6px}.final-panel .final-header h2{font-size:17px}.final-layout{grid-template-columns:minmax(0,1.5fr) minmax(190px,1fr);gap:14px}.final-panel .prizes{gap:6px;padding:7px}.final-panel .prize{height:clamp(60px,24dvh,105px)}.final-panel .final-hints{flex-direction:row;gap:7px}.final-panel .final-controls{gap:7px}.final-panel #guess{gap:8px}.final-panel .final-hints .btn{font-size:10px;padding:5px;min-height:36px}.final-panel .destination{height:36px;font-size:20px}.final-panel #guess .btn{min-height:36px;font-size:12px;padding:6px}.final-panel .hidden-image{font-size:28px}.final-panel .prize .btn{min-height:24px;font-size:9px;padding:3px}
  .welcome-screen{height:100dvh;min-height:0}
 }
+
+/* The moving character is decorative: all map buttons stay tappable. */
+.map-traveller{position:absolute;z-index:3;width:clamp(38px,5vw,74px);height:clamp(60px,10vh,110px);transform:translate(calc(-100% - 17px),-80%);pointer-events:none;filter:drop-shadow(0 3px 3px #62412166)}
+.map-traveller img{width:100%;height:100%;object-fit:contain;transform-origin:50% 90%}
+.map-traveller.walking img{animation:journey-step .32s ease-in-out infinite}
+.map-traveller.facing-left img{scale:-1 1}
+.journey-sparkles{position:absolute;bottom:8%;left:15%;color:#fff2a0;font-size:22px;text-shadow:0 0 8px #ffb300;opacity:0;white-space:nowrap}
+.walking .journey-sparkles{animation:journey-dust .65s ease-out infinite}
+.dashboard-shell .node.journey-arrival .bubble{animation:journey-glow 1s ease-out 2}
+@keyframes journey-step{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+@keyframes journey-dust{0%{opacity:0;transform:translate(0,0) scale(.5)}30%{opacity:1}100%{opacity:0;transform:translate(-22px,5px) scale(1.15)}}
+@keyframes journey-glow{0%,100%{filter:brightness(1);box-shadow:0 5px #b17b25,0 0 0 0 #ffe68200}45%{filter:brightness(1.25);box-shadow:0 5px #b17b25,0 0 0 13px #ffe68266,0 0 35px 12px #ffd454aa}}
+@media(max-height:550px) and (orientation:landscape){.map-traveller{width:36px;height:58px;transform:translate(calc(-100% - 7px),-65%)}}
+@media(prefers-reduced-motion:reduce){.map-traveller img,.journey-sparkles,.dashboard-shell .node.journey-arrival .bubble{animation:none!important}}
