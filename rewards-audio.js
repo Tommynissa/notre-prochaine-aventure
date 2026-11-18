@@ -10,6 +10,13 @@ const RewardAudio = {
       if (this.context.state === 'suspended') this.context.resume().catch(() => {});
     } catch {}
   },
+  click(fitted=false) {
+    if(!BGM.enabled)return;this.unlock();const ctx=this.context;if(!ctx)return;
+    const oscillator=ctx.createOscillator(),gain=ctx.createGain(),t=ctx.currentTime;
+    oscillator.type='sine';oscillator.frequency.setValueAtTime(fitted?1100:650,t);oscillator.frequency.exponentialRampToValueAtTime(fitted?750:320,t+.07);
+    gain.gain.setValueAtTime(.055,t);gain.gain.exponentialRampToValueAtTime(.001,t+.09);
+    oscillator.connect(gain);gain.connect(ctx.destination);this.voices.add(oscillator);oscillator.onended=()=>{oscillator.disconnect();gain.disconnect();this.voices.delete(oscillator)};oscillator.start(t);oscillator.stop(t+.1);
+  },
   stop() {
     for (const voice of this.voices) {
       try { voice.stop(); } catch {}
