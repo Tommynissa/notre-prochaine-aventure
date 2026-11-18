@@ -1,10 +1,10 @@
 const ROUTE={width:960,height:540,ground:425,zoneLength:1500,total:7500,
  zones:[
- {name:'Les Pouilles',sub:'Un petit air d’Italie',sky:'#b8eaff',land:'#d6bc81',color:'#d99954',items:['🍕','🫒','🍋']},
- {name:'Le Monténégro',sub:'Sur les hauteurs de Kotor',sky:'#b8d9e2',land:'#a8ad7d',color:'#909f8a',items:['🏔️','📷','🧭']},
- {name:'La Polynésie',sub:'Au fil du lagon',sky:'#a8eaf3',land:'#f4dda2',color:'#29b9bd',items:['🐋','🦈','ray']},
- {name:'Le Kenya',sub:'Safari à deux',sky:'#ffe4a7',land:'#dfbc76',color:'#d9a255',items:['🦁','🐘','🦏','🐆','🐃']},
- {name:'Londres',sub:'Dernière escale avant le décollage',sky:'#c2dfed',land:'#a4b4a3',color:'#a67257',items:['🪄','🦉','🧳']}
+ {name:'Les Pouilles',sub:'Un petit air d’Italie',sky:'#b8eaff',land:'#d6bc81',color:'#d99954',items:[0,1,2]},
+ {name:'Le Monténégro',sub:'Sur les hauteurs de Kotor',sky:'#b8d9e2',land:'#a8ad7d',color:'#909f8a',items:[3,4,5]},
+ {name:'La Polynésie',sub:'Au fil du lagon',sky:'#a8eaf3',land:'#f4dda2',color:'#29b9bd',items:[6,7,8]},
+ {name:'Le Kenya',sub:'Safari à deux',sky:'#ffe4a7',land:'#dfbc76',color:'#d9a255',items:[9,10,11,12,13]},
+ {name:'Londres',sub:'Dernière escale avant le décollage',sky:'#c2dfed',land:'#a4b4a3',color:'#a67257',items:[14,15,16]}
  ],
  create(){const solids=[],gaps=[],items=[],platforms=[];
   for(let z=0;z<5;z++){const base=z*1500;
@@ -37,20 +37,24 @@ async function platform(i){
  const routeTestMode=testMode;
  panel('<div class="big">✈️</div><h2>Anaïs prépare sa valise…</h2><p>Le parcours arrive.</p>');
  const scenery=new Image();scenery.src='assets/route-worlds.png';
- const heroine=new Image();heroine.src='assets/anais-route.png';
- try{await new Promise((resolve,reject)=>{heroine.onload=resolve;heroine.onerror=reject})}catch{save();panel('<h2>Le personnage n’a pas pu se charger.</h2><button class="btn" id="back">Retour à la carte</button>');document.querySelector('#back').onclick=map;return}
- panel(`<div class="route-game"><div class="route-head"><div><span class="eyebrow">En route ! · Trois vies au total</span><h2 id="route-country">Les Pouilles</h2></div><div class="route-stats"><span id="route-energy" aria-label="Vies restantes">${'♥ '.repeat(routeTestMode?3:state.routeLives)}${'♡ '.repeat(routeTestMode?0:3-state.routeLives)}</span><strong id="route-collection">0 souvenir</strong></div><button class="btn light" id="route-pause">Pause</button></div><div class="route-window"><canvas id="route-canvas" width="960" height="540" aria-label="Parcours de plateforme à travers cinq destinations"></canvas><div class="route-cover" id="route-cover"><h3>Cinq escales, une aventure.</h3><p>Avance, saute par-dessus les obstacles et ramasse les souvenirs. Tu disposes de trois vies pour tout le parcours.</p><p>Explore aussi les passerelles pour récupérer les souvenirs perchés. À l’arrivée, saute dans l’avion !</p><button class="btn" id="route-start">En route !</button></div><div class="route-message" id="route-message" aria-live="polite"></div></div><div class="route-controls"><div><button class="route-control" id="route-left" aria-label="Aller à gauche">◀</button><button class="route-control" id="route-right" aria-label="Aller à droite">▶</button></div><span id="route-distance">Escales : 1 / 5</span><button class="route-control jump-control" id="route-jump" aria-label="Sauter">Sauter ↑</button></div><div class="route-foot"><small>Clavier : ← → et Espace · Trois vies au total</small><button class="btn light" id="route-leave">Retour à la carte</button></div></div>`);
+ let loadingCancelled=false;cleanup=()=>{loadingCancelled=true};
+ const loadArt=src=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=reject;image.src=src});
+ let heroine,collectibles;
+ try{[heroine,collectibles]=await Promise.all([loadArt('assets/anais-animation-transparent.png'),loadArt('assets/route-collectibles.png')])}catch{if(loadingCancelled)return;panel('<h2>Les illustrations n’ont pas pu se charger.</h2><button class="btn" id="back">Retour à la carte</button>');document.querySelector('#back').onclick=map;return}
+ if(loadingCancelled)return;
+
+ panel(`<div class="route-game"><div class="route-head"><div><span class="eyebrow">En route ! · Trois vies au total</span><h2 id="route-country">Les Pouilles</h2></div><div class="route-stats"><span id="route-energy" aria-label="Vies restantes">${'♥ '.repeat(routeTestMode?3:state.routeLives)}${'♡ '.repeat(routeTestMode?0:3-state.routeLives)}</span><strong id="route-collection">0 souvenir</strong></div><button class="btn light" id="route-pause">Pause</button></div><div class="route-window"><canvas id="route-canvas" width="960" height="540" aria-label="Parcours de plateforme à travers cinq destinations"></canvas><div class="route-cover" id="route-cover"><h3>Cinq escales, une aventure.</h3><p>Avance, saute par-dessus les obstacles et ramasse les souvenirs. Tu disposes de trois vies pour tout le parcours.</p><p>Explore aussi les passerelles pour récupérer les souvenirs perchés. À l’arrivée, saute dans l’avion !</p><button class="btn" id="route-start">En route !</button></div><div class="route-message" id="route-message" aria-live="polite"></div></div><div class="route-controls"><div><button class="route-control" id="route-left" aria-label="Aller à gauche">◀</button><button class="route-control" id="route-right" aria-label="Aller à droite">▶</button></div><span id="route-distance">Escales : 1 / 5</span><button class="route-control jump-control" id="route-jump" aria-label="Sauter">Sauter ↑</button></div><div class="route-foot"><small>Clavier : ← → et Espace · Trois vies au total</small><button class="btn light" id="route-leave">Retour à la carte</button>${routeTestMode?'<button class="btn light" id="route-test-ending">Tester l’embarquement</button>':''}</div></div>`);
  document.querySelector('.panel').classList.add('platform-panel');
  const canvas=document.querySelector('#route-canvas'),c=canvas.getContext('2d'),world=ROUTE.create(),input={left:false,right:false};
  const pickupBursts=[];
- let p={x:(routeTestMode?0:state.routeZone*1500)+80,y:ROUTE.ground-79,w:31,h:79,vx:0,vy:0,grounded:true},energy=routeTestMode?3:state.routeLives,collected=routeTestMode?0:state.routeItems.length,zone=routeTestMode?0:state.routeZone,camera=0,raf=0,last=0,started=false,paused=false,ended=false,invulnerable=0,messageUntil=0,runTime=0;
+ let p={x:(routeTestMode?0:state.routeZone*1500)+80,y:ROUTE.ground-79,w:31,h:79,vx:0,vy:0,grounded:true},energy=routeTestMode?3:state.routeLives,collected=routeTestMode?0:state.routeItems.length,zone=routeTestMode?0:state.routeZone,camera=0,raf=0,last=0,started=false,paused=false,ended=false,invulnerable=0,messageUntil=0,runTime=0,boarding=null,facing=1;
  world.items.forEach((item,index)=>item.taken=!routeTestMode&&state.routeItems.includes(index));
  document.querySelector('#route-country').textContent=ROUTE.zones[zone].name;
  function persist(){if(routeTestMode)return;state.routeLives=energy;state.routeZone=zone;state.routeItems=world.items.flatMap((item,index)=>item.taken?[index]:[]);save()}
  function release(){input.left=input.right=false}
  function dispose(){persist();ended=true;cancelAnimationFrame(raf);release();document.removeEventListener('keydown',keydown);document.removeEventListener('keyup',keyup);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('blur',blur)}cleanup=dispose;
  function say(text){document.querySelector('#route-message').textContent=text;messageUntil=runTime+2.4}
- function jump(){if(started&&!paused&&!ended&&p.grounded){p.vy=-745;p.grounded=false}}
+ function jump(){if(started&&!paused&&!ended&&!boarding&&p.grounded){p.vy=-745;p.grounded=false}}
  function pause(){if(!started||ended)return;paused=!paused;release();const cover=document.querySelector('#route-cover');cover.hidden=!paused;document.querySelector('#route-pause').textContent=paused?'Reprendre':'Pause';if(paused){cover.innerHTML='<h3>Une petite escale ?</h3><p>Ton aventure t’attend.</p><button class="btn" id="route-resume">Reprendre</button>';document.querySelector('#route-resume').onclick=pause}last=0}
  function keydown(e){if(['ArrowLeft','ArrowRight','ArrowUp',' ','a','d','w'].includes(e.key)){e.preventDefault();if(e.key==='ArrowLeft'||e.key==='a')input.left=true;if(e.key==='ArrowRight'||e.key==='d')input.right=true;if(['ArrowUp',' ','w'].includes(e.key)&&!e.repeat)jump()}}
  function keyup(e){if(e.key==='ArrowLeft'||e.key==='a')input.left=false;if(e.key==='ArrowRight'||e.key==='d')input.right=false}
@@ -61,6 +65,15 @@ async function platform(i){
  document.querySelector('#route-pause').onclick=pause;
  document.querySelector('#route-leave').onclick=()=>{persist();map()};
  document.querySelector('#route-start').onclick=()=>{started=true;document.querySelector('#route-cover').hidden=true;document.addEventListener('keydown',keydown);document.addEventListener('keyup',keyup);document.addEventListener('visibilitychange',visibility);window.addEventListener('blur',blur);say('Ramasse les souvenirs et saute avec ↑ !')};
+ function beginBoarding(){
+  if(boarding||ended)return;
+  boarding={time:0,startX:p.x,startY:p.y+p.h};release();p.vx=p.vy=0;facing=1;
+  document.querySelectorAll('.route-control').forEach(b=>b.disabled=true);
+  document.querySelector('#route-message').textContent='';RewardAudio.play();
+ }
+ const endingTest=document.querySelector('#route-test-ending');
+ if(endingTest)endingTest.onclick=()=>{if(boarding)return;zone=4;p.x=7195;p.y=425-p.h;p.grounded=true;document.querySelector('#route-country').textContent=ROUTE.zones[4].name;document.querySelector('#route-distance').textContent='Escales : 5 / 5';document.querySelector('#route-cover').hidden=true;started=true;paused=false;document.addEventListener('visibilitychange',visibility);beginBoarding()};
+ function sprite(image,cell,cols,rows,x,y,w,h){const sw=image.naturalWidth/cols,sh=image.naturalHeight/rows;c.drawImage(image,(cell%cols)*sw,Math.floor(cell/cols)*sh,sw,sh,x,y,w,h)}
  function damage(){if(runTime<invulnerable)return;energy--;persist();if(!energy){finish(i,false,collected+' souvenirs');return}const safe=zone*1500+70;p={...p,x:safe,y:425-p.h,vy:0,vx:0,grounded:true};invulnerable=runTime+1.5;release();say('Une petite chute… on repart de cette escale !')}
  function rounded(x,y,w,h,r,fill){c.fillStyle=fill;c.beginPath();c.roundRect(x,y,w,h,r);c.fill()}
  function ellipse(x,y,rx,ry,fill){c.fillStyle=fill;c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.fill()}
@@ -76,11 +89,12 @@ async function platform(i){
   c.fillStyle=data.land;c.fillRect(ox,425,1500,115);c.fillStyle='#fff0bf';c.fillRect(ox,425,1500,12);for(let k=0;k<30;k++){ellipse(ox+k*62,460+(k%3)*19,5,2,'#b6a77766')}c.restore();
  }
  function plane(x){
-  c.save();c.translate(x,258);
+  c.save();const flight=boarding?Math.max(0,boarding.time-3.8):0;
+  c.translate(x+flight*flight*72,258-flight*flight*34);c.rotate(-Math.min(.16,flight*.065));
   // A small, polished passenger jet, drawn in the same warm palette as the game.
   const shape=(points,fill,stroke='#647e91',width=2)=>{c.beginPath();points();c.closePath();c.fillStyle=fill;c.fill();if(stroke){c.strokeStyle=stroke;c.lineWidth=width;c.stroke()}};
   const metal=c.createLinearGradient(0,32,0,107);metal.addColorStop(0,'#fffef5');metal.addColorStop(.42,'#edf8fc');metal.addColorStop(1,'#a9c6d7');
-  ellipse(-48,164,197,13,'#263e4a30');
+  if(!flight)ellipse(-48,164,197,13,'#263e4a30');
   // Far wing and tail fin, behind the cabin.
   shape(()=>{c.moveTo(-48,58);c.lineTo(-145,1);c.quadraticCurveTo(-157,-6,-174,0);c.lineTo(-114,70)},'#b7d4e2');
   const fin=c.createLinearGradient(-220,-47,-170,55);fin.addColorStop(0,'#83d7d9');fin.addColorStop(1,'#237e91');
@@ -106,15 +120,20 @@ async function platform(i){
   // Open boarding door: aligned with the existing final-jump trigger.
   rounded(-76,37,32,64,9,'#f9e5ad');rounded(-72,40,24,59,7,'#27495b');rounded(-69,43,6,49,3,'#4a7c8e');
   c.save();c.shadowColor='#ffe49a';c.shadowBlur=12+Math.sin(runTime*3)*4;c.strokeStyle='#ffe8a7';c.lineWidth=2;c.strokeRect(-72,42,24,56);c.restore();
+  if(boarding&&boarding.time>3.15){rounded(-72,40,24,59,7,'#d7e9ed');rounded(-68,45,16,18,5,'#477e97')}
+  c.save();if(boarding)c.globalAlpha=Math.max(0,1-(boarding.time-3.1)*2);
   // Boarding stairs and railings meet the runway.
   shape(()=>{c.moveTo(-78,102);c.lineTo(-43,102);c.lineTo(-89,167);c.lineTo(-135,167)},'#d0dfe4');
   for(let k=0;k<6;k++){const sy=108+k*10,sx=-80-k*8;c.strokeStyle='#7293a2';c.lineWidth=3;c.beginPath();c.moveTo(sx,sy);c.lineTo(sx+32+k*2,sy);c.stroke();c.strokeStyle='#fff8de';c.lineWidth=2;c.beginPath();c.moveTo(sx,sy-2);c.lineTo(sx+32+k*2,sy-2);c.stroke()}
   c.strokeStyle='#e7bc6a';c.lineWidth=3;c.beginPath();c.moveTo(-80,86);c.lineTo(-140,151);c.moveTo(-42,86);c.lineTo(-89,151);c.stroke();
   for(let k=0;k<3;k++){c.beginPath();c.moveTo(-80-k*28,87+k*30);c.lineTo(-80-k*28,106+k*30);c.moveTo(-42-k*22,87+k*30);c.lineTo(-42-k*22,106+k*30);c.stroke()}
+  c.restore();
+  if(!boarding){
   // A restrained boarding cue, readable on phone screens.
   rounded(-178,-91,244,36,16,'#fff3cfeF');c.strokeStyle='#c69851';c.lineWidth=2;c.stroke();
   c.font='bold 18px Arial';c.fillStyle='#745033';c.textAlign='center';c.fillText('Prête pour le décollage ?',-56,-67);
   const pulse=Math.sin(runTime*3)*4;c.fillStyle='#ffe09a';c.beginPath();c.moveTo(-65,-45+pulse);c.lineTo(-54,-33+pulse);c.lineTo(-43,-45+pulse);c.lineTo(-43,-36+pulse);c.lineTo(-54,-24+pulse);c.lineTo(-65,-36+pulse);c.fill();
+  }
   c.restore();
  }
 
@@ -148,17 +167,36 @@ async function platform(i){
    c.fillStyle='#78452f';for(const bx of [x+16,x+platform.w-28]){c.beginPath();c.moveTo(bx,platform.y+platform.h-2);c.lineTo(bx+13,platform.y+platform.h-2);c.lineTo(bx+6,platform.y+platform.h+14);c.closePath();c.fill()}
    rounded(x+2,platform.y+6,platform.w,platform.h,5,'#694d3d66');rounded(x,platform.y,platform.w,platform.h,5,'#9a542f');rounded(x+3,platform.y+2,platform.w-6,platform.h-6,3,'#e4a65b');c.fillStyle='#f4cc79';c.fillRect(x+4,platform.y+2,platform.w-8,4);for(let j=0;j<platform.w;j+=28){c.strokeStyle='#b66b3c';c.lineWidth=2;c.strokeRect(x+j+2,platform.y+7,24,9);ellipse(x+j+6,platform.y+10,1.5,1.5,'#ffe4a4')}}
   for(const item of world.items){const x=item.x-camera;if(item.taken||x< -50||x>1010)continue;if(item.elevated){c.strokeStyle='#ffe487';c.lineWidth=2;c.beginPath();c.arc(x,item.y,28+Math.sin(runTime*3)*2,0,Math.PI*2);c.stroke()}
-   ellipse(x,item.y,24,24,'#fff6d6d9');c.textAlign='center';c.font='30px serif';if(item.icon==='ray'){c.save();c.translate(x,item.y);c.fillStyle='#6896a8';c.beginPath();c.moveTo(0,-13);c.quadraticCurveTo(-12,-9,-22,7);c.quadraticCurveTo(-8,4,0,12);c.quadraticCurveTo(8,4,22,7);c.quadraticCurveTo(12,-9,0,-13);c.fill();c.strokeStyle='#507f93';c.lineWidth=2;c.beginPath();c.moveTo(0,9);c.quadraticCurveTo(3,20,10,23);c.stroke();c.restore()}else c.fillText(item.icon,x,item.y+10+Math.sin(runTime*3+item.x)*3);c.font='14px serif';c.fillStyle='#e2757b';c.fillText('♥',x+19,item.y-13)}
+   const float=Math.sin(runTime*3+item.x)*3;ellipse(x,item.y,25,25,'#fff6d6b0');
+   sprite(collectibles,item.icon,5,4,x-27,item.y-27+float,54,54);
+   sprite(collectibles,17,5,4,x+13,item.y-24,20,20);
+  }
   for(let j=pickupBursts.length-1;j>=0;j--){const b=pickupBursts[j],age=runTime-b.time;if(age>.65){pickupBursts.splice(j,1);continue}c.save();c.globalAlpha=1-age/.65;for(let k=0;k<6;k++){const angle=k*Math.PI/3;ellipse(b.x-camera+Math.cos(angle)*age*65,b.y+Math.sin(angle)*age*55-age*25,3,3,'#ffe380')}c.restore()}
   if(camera>6200)plane(7320-camera);
-  const x=p.x-camera+p.w/2,y=p.y+p.h;const support=world.platforms.find(s=>Math.abs(p.y+p.h-s.y)<2&&p.x+p.w>s.x&&p.x<s.x+s.w)||world.solids.find(s=>Math.abs(p.y+p.h-s.y)<2&&p.x+p.w>s.x&&p.x<s.x+s.w);if(p.grounded)ellipse(x,support?support.y+2:427,24,5,'#38564633');c.save();c.globalAlpha=runTime<invulnerable&&Math.floor(runTime*10)%2?.4:1;const bob=p.grounded&&p.vx?Math.sin(runTime*18)*3:0;c.translate(x,y+bob);if(p.vx<0)c.scale(-1,1);const spriteH=105,spriteW=spriteH*heroine.naturalWidth/heroine.naturalHeight;c.drawImage(heroine,-spriteW/2,-spriteH,spriteW,spriteH);c.restore();
+  let heroX=p.x+p.w/2,feet=p.y+p.h,pose=!p.grounded?5:p.vx?Math.floor(runTime*10)%4:4,opacity=1;
+  if(boarding){const t=boarding.time;
+   if(t<.5){const k=t/.5;heroX=boarding.startX+p.w/2+(7203-boarding.startX-p.w/2)*k;feet=boarding.startY+(425-boarding.startY)*k;pose=5}
+   else if(t<1.2){heroX=7203;feet=425;pose=6}
+   else if(t<2.8){const k=(t-1.2)/1.6;heroX=7203+61*k;feet=425-69*k;pose=Math.floor(runTime*10)%4}
+   else{heroX=7264;feet=356;pose=7;opacity=Math.max(0,1-(t-2.8)/.45)}
+  }
+  const x=heroX-camera,y=feet;
+  const support=world.platforms.find(s=>Math.abs(p.y+p.h-s.y)<2&&p.x+p.w>s.x&&p.x<s.x+s.w)||world.solids.find(s=>Math.abs(p.y+p.h-s.y)<2&&p.x+p.w>s.x&&p.x<s.x+s.w);
+  if(!boarding&&p.grounded)ellipse(x,support?support.y+2:427,22,4,'#38564633');
+  c.save();c.globalAlpha=opacity*(runTime<invulnerable&&Math.floor(runTime*10)%2?.4:1);c.translate(x,y);if(facing<0)c.scale(-1,1);
+  // Eight distinct poses, with a shared canvas cell and stable foot baseline.
+  sprite(heroine,pose,4,2,-43,-105,86,114);c.restore();
+  if(boarding){c.save();c.textAlign='center';c.font='bold 23px Arial';rounded(230,42,500,44,20,'#fff3d9ee');c.fillStyle='#745033';c.fillText(boarding.time<2.8?'Embarquement pour la prochaine aventure…':'Bon voyage, Anaïs !',480,71);c.restore()}
+
   const progress=p.x/7400;c.fillStyle='#ffffff9e';c.fillRect(20,15,300,8);c.fillStyle='#f7bb32';c.fillRect(20,15,300*progress,8);
  }
  function frame(now){if(ended)return;const dt=last?Math.min((now-last)/1000,.035):0;last=now;
-  if(started&&!paused){runTime+=dt;ROUTE.step(p,world,input,dt);const newZone=Math.min(4,Math.floor(p.x/1500));if(newZone!==zone){zone=newZone;document.querySelector('#route-country').textContent=ROUTE.zones[zone].name;persist();say(ROUTE.zones[zone].sub)}
+  if(started&&!paused){runTime+=dt;
+   if(boarding){boarding.time+=dt;if(boarding.time>=7){finish(i,true,collected+' souvenirs');return}draw();raf=requestAnimationFrame(frame);return;}
+   ROUTE.step(p,world,input,dt);if(p.vx)facing=Math.sign(p.vx);const newZone=Math.min(4,Math.floor(p.x/1500));if(newZone!==zone){zone=newZone;document.querySelector('#route-country').textContent=ROUTE.zones[zone].name;persist();say(ROUTE.zones[zone].sub)}
    for(const item of world.items)if(!item.taken&&Math.abs(item.x-(p.x+p.w/2))<40&&Math.abs(item.y-(p.y+p.h/2))<65){item.taken=true;collected++;pickupBursts.push({x:item.x,y:item.y,time:runTime});persist();say(item.elevated?'Un souvenir perché ! ♡':'Un souvenir de plus ! ♡')}
    if(p.y>590){damage();if(ended)return}
-   if(p.x>7240&&p.y<345&&!p.grounded){finish(i,true,collected+' souvenirs');return}
+   if(p.x>7240&&p.y<345&&!p.grounded)beginBoarding();
    document.querySelector('#route-energy').textContent='♥ '.repeat(energy)+'♡ '.repeat(3-energy);document.querySelector('#route-collection').textContent=collected+' souvenir'+(collected>1?'s':'');document.querySelector('#route-distance').textContent='Escales : '+(zone+1)+' / 5';if(runTime>messageUntil)document.querySelector('#route-message').textContent='';
   }draw();raf=requestAnimationFrame(frame)
  }raf=requestAnimationFrame(frame)
