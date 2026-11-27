@@ -80,3 +80,22 @@
 /* Intro medallions use the atlas's 3:4 cell ratio at every screen size. */
 .story-emblem{position:relative;min-width:0;min-height:0}
 .story-emblem>.illustrated-icon{position:absolute;left:50%;top:50%;width:70.5%;height:94%;transform:translate(-50%,-50%);padding:0;border:0;filter:drop-shadow(0 4px 2px #8b4a3866)}
+
+/* A miniature travel album replaces the plain memory medallion. */
+.memory .card{border-color:#fff1bf;box-shadow:inset 0 1px #fff,0 4px #087e98;border-radius:14px}
+.memory .card-back{position:relative;isolation:isolate;background:radial-gradient(ellipse at 30% 15%,#81f0e1,#22bac5 60%,#0b8da8);overflow:hidden}
+.memory .card-back:before{content:"";position:absolute;inset:5px;border:1px solid #dbfff3aa;border-radius:8px;box-shadow:inset 0 0 0 2px #0b91a333;pointer-events:none}
+.memory .card-back:after{content:"";position:absolute;inset:0;z-index:-1;background:repeating-linear-gradient(135deg,transparent 0 12px,#ffffff0b 12px 14px);pointer-events:none}
+.memory-album{display:block;width:92%;height:94%;background:url('assets/memory/card-back.svg') center/contain no-repeat;filter:drop-shadow(0 2px 2px #066c8833)}
+@media(orientation:landscape) and (max-height:550px){.memory .card-back:before{inset:3px;border-radius:5px}.memory .card{border-radius:9px}}
+
+/* Personalised card back with the two established character cutouts. */
+.memory-couple{position:relative;display:block;width:88%;height:86%;border:2px solid #ffe7a5;border-radius:45% 45% 13px 13px;background:radial-gradient(ellipse at 50% 35%,#fff8dc,#ffd494 65%,#e6ad66);box-shadow:inset 0 0 0 2px #fff5cf,0 3px 5px #075c7566;overflow:hidden}
+.memory-person{position:absolute;bottom:0;width:79%;height:91%;background-image:url('assets/intro-couple-busts.png');background-size:200% 100%;background-repeat:no-repeat;filter:drop-shadow(0 2px 2px #69402744)}
+.memory-thomas{left:-15%;background-position:left center}
+.memory-anais{right:-15%;background-position:right center}
+.memory-couple-heart{position:absolute;left:50%;bottom:3%;transform:translateX(-50%);font-size:clamp(15px,2.3vh,24px);line-height:1;color:#ee6e94;text-shadow:0 1px #ae405c,0 0 3px #fff7dd;z-index:2}
+.memory-person{width:92%;height:auto;aspect-ratio:1;bottom:8%}
+.memory-thomas{left:-17%}.memory-anais{right:-17%}
+.memory-person{width:125%;bottom:0}.memory-thomas{left:-35%}.memory-anais{right:-35%}
+.memory-couple-heart{top:9%;bottom:auto;font-size:clamp(16px,3vh,27px)}
