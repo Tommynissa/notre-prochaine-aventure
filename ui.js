@@ -1,5 +1,7 @@
 // Shared illustrated icons keep every game in the same visual family.
 function gameIcon(type){
+ const cells={memory:0,travel:1,personal:2,puzzle:3,rhythm:4,platform:5,gift:6};
+ if(type in cells){const n=cells[type];return `<span class="game-icon illustrated-icon" aria-hidden="true" style="background-position:${n%4*100/3}% ${Math.floor(n/4)*100}%"></span>`;}
  const shapes={
  memory:'<rect x="13" y="12" width="37" height="47" rx="7" fill="#74d4ee" transform="rotate(-13 32 35)"/><rect x="29" y="18" width="37" height="47" rx="7" fill="#ffedbd" transform="rotate(10 48 41)"/><path d="M48 52 37 42C27 32 41 26 48 35C55 26 69 32 59 42Z" fill="#f47a91"/>',
  travel:'<circle cx="40" cy="38" r="27" fill="#58ccec"/><path d="m22 19 10-5 9 6-3 9 10 5-4 11-9-2-5-11-12-3Zm27 32 8-8 9 1-8 14-8 5Z" fill="#9cd857"/><path d="M18 64h43M40 65v-7" stroke="#df9a32" stroke-width="7"/>',
