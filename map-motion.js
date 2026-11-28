@@ -28,7 +28,7 @@ const MapJourney = {
       actor.classList.remove('walking','facing-left');
       highlighted=map.querySelector(stage===6?'#final':`[data-level="${stage}"]`);
       highlighted?.classList.remove('awaiting-unlock');
-      highlighted?.classList.add('journey-arrival','unlock-celebration');
+      highlighted?.classList.add('journey-arrival','unlock-celebration');RewardAudio.cue('level');
     };
     const from=journey?.from, to=journey?.to;
     const moving=Number.isInteger(from)&&Number.isInteger(to)&&from>=0&&to<=6&&to>from;
@@ -72,10 +72,10 @@ const MapReward={
   if(!slot||!origin)return ()=>{};
   const wasEarned=slot.classList.contains('earned');
   const flight=document.createElement('div');flight.className='reward-flight';flight.setAttribute('aria-hidden','true');flight.innerHTML=gameIcon(LEVELS[reward.index].type)+'<span class="reward-flight-trail">✦ · ✧</span>';
-  document.body.append(flight);slot.classList.add('receiving');slot.classList.remove('earned');
+  document.body.append(flight);RewardAudio.cue('flight');slot.classList.add('receiving');slot.classList.remove('earned');
   let raf=0,last=performance.now(),elapsed=0,arrived=false,stopped=false;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function arrive(){arrived=true;flight.remove();slot.classList.remove('receiving');slot.classList.add('earned','reward-landed');slot.setAttribute('aria-label',LEVELS[reward.index].name+(reward.preview?' : aperçu de l’objet débloqué':' : objet débloqué'));RewardAudio.click(true)}
+  function arrive(){arrived=true;flight.remove();slot.classList.remove('receiving');slot.classList.add('earned','reward-landed');slot.setAttribute('aria-label',LEVELS[reward.index].name+(reward.preview?' : aperçu de l’objet débloqué':' : objet débloqué'));RewardAudio.cue('arrival')}
   function tick(now){if(stopped)return;if(!document.hidden)elapsed+=Math.min(now-last,80);last=now;
    const a=origin.getBoundingClientRect(),b=slot.getBoundingClientRect();
    if(!b.width||!b.height){arrive();return}

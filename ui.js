@@ -13,3 +13,8 @@ function gameIcon(type){
  };
  return `<svg class="game-icon" viewBox="0 0 80 80" aria-hidden="true"><g stroke="#87542c" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">${shapes[type]||shapes.gift}</g></svg>`;
 }
+
+function controlIcon(type){
+ const paths=type==='settings'?'<path d="m10 3-.5 2-2 .9-1.8-.7-2 3.5 1.5 1.4v2.3L3.7 14l2 3.5 1.8-.7 2 .9.5 2.3h4l.5-2.3 2-.9 1.8.7 2-3.5-1.5-1.6v-2.3l1.5-1.4-2-3.5-1.8.7-2-.9L14 3Z"/><circle cx="12" cy="11.5" r="3"/>':'<path d="M4 9h4l5-4v14l-5-4H4Z"/>'+(type==='sound-on'?'<path d="M16 8c2 2 2 6 0 8m3-11c4 4 4 10 0 14"/>':'<path d="m17 9 5 6m0-6-5 6"/>');
+ return `<svg class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+}

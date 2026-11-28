@@ -17,6 +17,20 @@ const RewardAudio = {
     gain.gain.setValueAtTime(.055,t);gain.gain.exponentialRampToValueAtTime(.001,t+.09);
     oscillator.connect(gain);gain.connect(ctx.destination);this.voices.add(oscillator);oscillator.onended=()=>{oscillator.disconnect();gain.disconnect();this.voices.delete(oscillator)};oscillator.start(t);oscillator.stop(t+.1);
   },
+  cue(kind) {
+    if(!BGM.enabled||document.hidden)return;
+    this.unlock();const ctx=this.context;if(!ctx)return;
+    const sequences={lost:[[0,440],[.17,349.23],[.35,293.66]],level:[[0,740],[.1,988],[.24,1480]],arrival:[[0,880],[.09,1320]],flight:[[0,420]]};
+    for(const [delay,freq] of sequences[kind]||[]){
+      const o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+delay+.01;
+      o.type='sine';o.frequency.setValueAtTime(freq,t);
+      const duration=kind==='flight'?.65:.4;
+      if(kind==='flight')o.frequency.exponentialRampToValueAtTime(1100,t+duration);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(kind==='flight'?.025:.055,t+.025);g.gain.exponentialRampToValueAtTime(.001,t+duration);
+      o.connect(g);g.connect(ctx.destination);this.voices.add(o);
+      o.onended=()=>{o.disconnect();g.disconnect();this.voices.delete(o)};o.start(t);o.stop(t+duration+.02);
+    }
+  },
   stop() {
     for (const voice of this.voices) {
       try { voice.stop(); } catch {}

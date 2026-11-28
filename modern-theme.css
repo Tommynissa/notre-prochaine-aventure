@@ -99,3 +99,27 @@
 .memory-thomas{left:-17%}.memory-anais{right:-17%}
 .memory-person{width:125%;bottom:0}.memory-thomas{left:-35%}.memory-anais{right:-35%}
 .memory-couple-heart{top:9%;bottom:auto;font-size:clamp(16px,3vh,27px)}
+
+/* Defeats share the illustrated reward frame, keeping the prize concealed. */
+.loss-content{gap:9px}
+.loss-window .reward-ribbon{color:#99503d}
+.loss-window .loss-content h2{color:#88553d}
+.loss-stage{position:relative;isolation:isolate;display:grid;place-items:center;flex:1;min-height:0;width:100%;margin:8px 0}
+.loss-glow{position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse,#fff6d9 0%,#e4c3a855 45%,transparent 70%)}
+.loss-mystery{height:100%;max-height:285px;aspect-ratio:4/5;max-width:75%;padding:8px 8px 28px;position:relative;background:#fff9e9;border:1px solid #e7d3b3;box-shadow:0 5px 0 #c8a67c,0 12px 22px #9d714133;transform:rotate(-4deg);animation:loss-card-in .6s ease-out both}
+.loss-art{position:relative;display:grid;place-items:center;width:100%;height:100%;border:2px solid #c4d8d3;border-radius:6px;background:repeating-linear-gradient(135deg,#b6d2cd 0 12px,#bed9d3 12px 24px);overflow:hidden}
+.loss-art>.illustrated-icon{width:63%;height:84%;opacity:.45;filter:grayscale(.8)}
+.loss-mystery>span{position:absolute;bottom:7px;left:0;right:0;font-size:13px;color:#967558;font-style:italic}
+.loss-lock{position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);width:38px;height:31px;border:2px solid #fff0c4;border-radius:7px;background:linear-gradient(#ffe298,#dca948);box-shadow:0 3px 6px #6e68584d}
+.loss-lock i{position:absolute;left:6px;top:-22px;width:22px;height:23px;border:5px solid #fff0bd;border-bottom:0;border-radius:15px 15px 0 0}
+.loss-lock:after{content:'';position:absolute;left:15px;top:9px;width:5px;height:10px;border-radius:5px;background:#976a32}
+.loss-window .actions{width:100%;flex-wrap:nowrap;gap:10px}.loss-window .actions .btn{min-width:0;font-size:14px;padding:10px 16px}
+.loss-window .btn.light{background:linear-gradient(#71cfd2,#298d9e);border-color:#d9f7ef;box-shadow:inset 0 2px #b5eee8,0 4px #216c7b;text-shadow:0 1px #256576}
+@keyframes loss-card-in{from{opacity:0;transform:translateY(16px) rotate(-8deg) scale(.9)}to{opacity:1;transform:rotate(-4deg)}}
+@media(orientation:landscape) and (max-height:550px){.loss-content{gap:3px;inset:19% 13% 8%}.loss-stage{margin:3px 0}.loss-mystery{padding:4px 4px 18px}.loss-mystery>span{font-size:9px;bottom:3px}.loss-lock{scale:.7;transform-origin:0 0}.loss-window .actions .btn{font-size:11px;padding:6px 10px;min-height:36px}.loss-content>p{font-size:11px;line-height:1.2}}
+
+/* Compact, accessible icon controls in the player sidebar. */
+.sidebar-controls{flex-direction:row;justify-content:center;gap:14px}
+.dashboard-shell .sidebar-controls .btn,.dashboard-shell .sidebar-controls #settings{width:52px;height:48px;min-height:44px;padding:9px;border-radius:16px;display:grid;place-items:center;flex:0 0 auto}
+.control-icon{display:block;width:27px;height:27px;filter:drop-shadow(0 1px 1px #08617266)}
+@media(orientation:landscape) and (max-height:550px){.sidebar-controls{gap:12px}.dashboard-shell .sidebar-controls .btn,.dashboard-shell .sidebar-controls #settings{width:46px;height:44px;padding:7px}}
